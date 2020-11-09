@@ -10,7 +10,7 @@ class Currency extends Model
     use HasFactory;
 
     protected $primaryKey = 'iso';
-    protected $incrementing = false;
+    public $incrementing = false;
 
     protected $fillable = [
         'iso',
