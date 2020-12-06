@@ -30,10 +30,10 @@
                         <div class="row mt-3">
                             <div class="col">
                                 <label for="">Select the desired payment platform:</label>
-                                <div class="form-group">
+                                <div class="form-group" id="toggler">
                                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                         @foreach($paymentPlatforms as $paymentPlatform)
-                                        <label for="" class="btn btn-outline-secondary rounded m-2 p-1">
+                                    <label for="" class="btn btn-outline-secondary rounded m-2 p-1" data-target="#{{$paymentPlatform->name}}collapse" data-toggle="collapse">
                                             <input type="radio" name="payment_platform" value="{{ $paymentPlatform->id}}" required>
                                             <img class="img-thumbnail" src="{{ asset($paymentPlatform->image) }}" alt="">
                                         </label>
@@ -42,9 +42,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="text-center mt-3">
+
+                        @foreach($paymentPlatforms as $paymentPlatform)
+                            <div>
+                                @includeIf('components.'.strtolower($paymentPlatform->name).'-collapse')
+                            </div>
+                        @endforeach
+
+                        <div class="text-center mt-3" id="{{$paymentPlatform->name}}collapse">
                             <button type="submit" id="payButton" class="btn btn-primary btn-lg">Pay</button>
                         </div>
+
                     </form>
                 </div>
             </div>
