@@ -27,9 +27,6 @@ class HomeController extends Controller
     {
         $currencies = Currency::all();
         $paymentPlatforms = PaymentPlatform::all();
-        return view('home')->with([
-            'currencies' => $currencies,
-            'paymentPlatforms' => $paymentPlatforms,
-        ]);
+        return view('home')->with(compact('currencies', 'paymentPlatforms'));
     }
 }
