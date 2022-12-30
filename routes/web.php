@@ -18,10 +18,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('admin')->group(function () {
+Route::prefix('payments')->group(function () {
     Route::post('pay', [App\Http\Controllers\Admin\PaymentController::class, 'pay'])->name('pay');
-    Route::get('approval',[App\Http\Controllers\Admin\PaymentController::class, 'approval'])->name('approval');
-    Route::get('cancelled',[App\Http\Controllers\Admin\PaymentController::class, 'cancelled'])->name('cancelled');
+    Route::get('approval', [App\Http\Controllers\Admin\PaymentController::class, 'approval'])->name('approval');
+    Route::get('cancelled', [App\Http\Controllers\Admin\PaymentController::class, 'cancelled'])->name('cancelled');
 });
 
 Auth::routes();
