@@ -3,11 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Resolvers\PaymentPlatformResolver;
 use App\Services\PayPalService;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
+    protected $paymentPlatformResolver;
+
+    public function __construct(PaymentPlatformResolver $paymentPlatformResolver)
+    {
+        $this->middleware('auth');
+        $this->paymentPlatformResolver = $paymentPlatformResolver;
+    }
+
     public function pay(Request $request)
     {
         $rules = [
@@ -18,16 +27,24 @@ class PaymentController extends Controller
 
         $request->validate($rules);
 
-        $paymentPlatform = resolve(PayPalService::class);
+        $paymentPlatform = $this->paymentPlatformResolver->resolveService($request->payment_platform);
+
+        session()->put('paymentPlatformId', $request->payment_platform);
 
         return $paymentPlatform->handlePayment($request);
     }
 
     public function approval()
     {
-        $paymentPlatform = resolve(PayPalService::class);
+        if (session()->has('paymentPlatformId')) {
+            $paymentPlatform = $this->paymentPlatformResolver->resolveService(session()->get('paymentPlatformId'));
 
-        return $paymentPlatform->handleApproval();
+            return $paymentPlatform->handleApproval();
+        }
+
+        return redirect()
+            ->route('home')
+            ->withErrors('We cannot retireve your payment platform. Try again, please.');
     }
 
     public function cancelled()
